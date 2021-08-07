@@ -14,7 +14,7 @@ When should you use macros? It's a trade off. You should use them when you want 
 
 Here's a simple example of a useful macro: a 16-bit comparison with zero operation. Using ASM80
 
-```asm
+```z80
 .macro isZero, hireg, loreg
  ld A, loreg
  or hireg
