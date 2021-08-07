@@ -4,7 +4,7 @@
 
 ## Tools of the trade: Macros
 
-An early purchase in my programming career was a manual for the [Intel 8080 Assembler](https://altairclone.com/downloads/manuals/8080%20Programmers%20Manual.pdf) which I think I bought at my local Tandy shop. I couldn't afford the actual software let alone the machine to run it on so assembly language for a long time remained a goal rather than a reality. I had to hand assemble all of my first programs but that was OK because they would only exist on paper for many years. I would not own a computer until I built my own in 1981 or so which Ken Stone reminds me I called the "Onion" computer (if that's so then maybe the TEC-1 could be considered the Onion ][ ;-)
+An early purchase in my programming career was a manual for the [Intel 8080 Assembler](https://altairclone.com/downloads/manuals/8080%20Programmers%20Manual.pdf) which I think I bought at my local Tandy shop. I couldn't afford the actual software let alone the machine to run it on so assembly language for a long time remained a goal rather than a reality. I had to hand assemble all of my first programs but that was OK because they would only exist on paper for many years. I would not own a computer until I built my own in 1981 or so which Ken Stone reminds me I called the "Onion" computer (if that's so then maybe the TEC-1 could be considered the Onion ][ ) ;-)
 
 Anyway, one of the most mysterious chapters of this book for me was the one on macros. The word "macro" up to that point had been associated in my mind with "macro photography". I had no idea what macro meant in this context but gradually I came to understand that a macro was kind of like a subroutine except that it wasn't a subroutine that ran on the microprocessor but inside the assembler itself. Any repeated block of code could be put into a macro but instead of it being called like a normal subroutine, it would be expanded in place. Using macros unlike subroutines wasn't going to make my programs shorter. A careless use of them would make my program longer! So what use were they? That's a good question.
 
@@ -78,18 +78,19 @@ ex DE,HL
 ```
 
 if you used it like this
-swapper 1,2
+`swapper 1,2`
 would expand to
 
 ```asm
-;\*Macro unroll: swapper
+;*Macro unroll: swapper
 ld DE,1
 ld HL,1
 e1 DE,HL
 ```
 
 In ASM80 you will get an error:
-Unrecognized instruction E1 Line: 3
+
+_Unrecognized instruction E1 Line: 3_
 
 So be careful naming your parameters! That said you can see that this is an extremely powerful feature for rewriting your code. Just don't forget that you are not writing functions here. Macros are a source level expansion.
 
