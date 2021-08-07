@@ -14,25 +14,21 @@ When should you use macros? It's a trade off. You should use them when you want 
 
 Here's a simple example of a useful macro: a 16-bit comparison with zero operation. Using ASM80
 
----
-
-.macro isZero, hireg, loreg  
- ld A, loreg  
- or hireg  
+```asm
+.macro isZero, hireg, loreg
+ ld A, loreg
+ or hireg
 .endm
-
----
+```
 
 in TASM I believe it would be
 
----
-
+```asm
 isZero MACRO hireg, loreg
-ld A, loreg  
- or hireg  
+ld A, loreg
+ or hireg
 ENDM
-
----
+```
 
 The macro's name is isZero and it sets the zero flag if the two registers it checks are zero. For example if you wanted to know if DE contained zero you could just do something like:
 
