@@ -32,58 +32,49 @@ ENDM
 
 The macro's name is isZero and it sets the zero flag if the two registers it checks are zero. For example if you wanted to know if DE contained zero you could just do something like:
 
-````asm
-
+```asm
 ld DE,1
 dec DE
 isZero D,E
 jr z, exit
-
 ```
 
 This expands to
 
 ```asm
-
 ld DE,1
 dec DE
 ;\*Macro unroll: isZero
 ld A, E
 or D
 jr z, exit
-
 ```
 
 Macros can call other macros so you could create a specialised version of isZero e.g.
 
 ```asm
-
 .macro isHLZero
  isZero H,L
 .endm
-
 ```
 
 Using isHLZero in your code will always expand to
-```asm
 
+```asm
 ;*Macro unroll: isHLZero
 ;*Macro unroll: isZero
 ld A, L ; 4t
 or H ; 4t
-
 ```
 
 Because macros work at the source level you need to be aware of some gotchas. If you have parameters, the names you use for them get substituted wherever they appear in you macro body. For example:
 
 ```asm
-
 .macro swapper, x, y
 ld DE,x
 ld HL,y
 ex DE,HL
 .endm
-
 ```
 
 if you used it like this
@@ -91,12 +82,10 @@ swapper 1,2
 would expand to
 
 ```asm
-
 ;\*Macro unroll: swapper
 ld DE,1
 ld HL,1
 e1 DE,HL
-
 ```
 
 In ASM80 you will get an error:
@@ -105,42 +94,37 @@ Unrecognized instruction E1 Line: 3
 So be careful naming your parameters! That said you can see that this is an extremely powerful feature for rewriting your code. Just don't forget that you are not writing functions here. Macros are a source level expansion.
 
 If that's too foot-gunny for you in ASM80 you can skip formal parameters and use numbered parameters e.g.
-```asm
 
+```asm
 .macro swapper
 ld DE,%%1
 ld HL,%%2
 ex DE,HL
 .endm
-
 ```
 
 A related issue has to do with jumps inside macros. Obviously you need jumps to perform any kind of loop or conditional code. However jumps in assembly need labels and labels need to be unique. Every macro system has a way of making names which are local to each use of your macro. In ASM80 you use %%M. I'm just going to borrow this example straight from the ASM80 manual:
 
 ```asm
-
 .macro xyz
 loop%%M:
 inc a
 dec b
 jr nz,loop%%M
 .endm
-
 ```
 
 If you use the macro a few times
+
 ```asm
-
 xyz
 xyz
 xyz
-
 ```
 
 it will expand as:
 
 ```asm
-
 ;*Macro unroll: xyz
 LOOPM_1576S96:
 INC a
@@ -156,10 +140,8 @@ LOOPM_1578S98:
 INC a
 DEC b
 JR nz,loopM_1578S98
-
 ```
 
 Note that while all these expansions are kind of ugly, you don't have to look at them except in your .LST output file. Understanding how they work though will certainly aid in using them effectively.
 
 As I have tried to convey. I think macros are pretty awesome and you can use them to save a lot of work. They can also help you write your way out of low-level programming into something more structured and high level. That's a direction I'm hoping to build to with this series of articles.
-````
