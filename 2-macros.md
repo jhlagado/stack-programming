@@ -63,8 +63,8 @@ Using isHLZero in your code will always expand to
 ```asm
 ;*Macro unroll: isHLZero
 ;*Macro unroll: isZero
-ld A, L ; 4t
-or H ; 4t
+ld A, L 
+or H 
 ```
 
 Because macros work at the source level you need to be aware of some gotchas. If you have parameters, the names you use for them get substituted wherever they appear in you macro body. For example:
