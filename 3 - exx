@@ -1,0 +1,19 @@
+The Z80 is a processor that often looks better on paper than in reality. Compared to the 8080 what does it have? Well there are those two index registers but they end up being good (if slow) for storing values, especially if you use the undocumented instructions LD IXH,B and LD IXL,C etc. but absolutely abysmal for loading and saving indexed values. Nearly three times as slow as HL. An even more notorious example of a "looks good on paper" feature is the set of alternative or shadow registers: AF' BC' DE' HL' For the last couple of years I've been scratching my head trying to work out a good use for them. They always seemed useless for anything other than fast interrupt servicing. I think now I have finally worked out a use for them. 
+
+In a threaded Forth (ITC or DTC) the virtual machine has several standard registers, the most important of which should be implemented in the CPU if possible for speed. Of the most important we have IP, the interpreter pointer, RSP the return stack pointer, W the working register which contains the address of the next word to execute, TOS or "top of stack" which is an optimisation to reduce memory access (and possibly NOS "next-to-top-of-stack" as well). The Z80 has a few general purpose 16 bit register pairs but not enough fast ones to implement all of the Forth registers without either using a slow IX or IY register (Z80 camelForth) or even a memory variable (Z80 eForth).
+
+After mulling this over for a while I now have a scheme which makes the best use of the BC, DE, HL, BC', DE', HL' and this makes the Z80 feel luxuriously big. 
+
+SP = SP parameter stack
+BC = IP interpreter pointer
+DE = RSP return stack pointer
+HL = W working resister
+
+DE' = transient
+HL' = TOS top of stack
+
+IX,IY,BC' = unused
+
+The counterintuitive insight here is that TOS doesn't need to be accessible at all times. The important registers for Forth are IP, SP, RSP and W. SP is available at all times which IP, RSP and W are swapped in and out to enable processor access to TOS and DE. This swapping operation EXX is only 4 t cycles and can happen pretty often at low cost.
+
+So the main work of the Forth interpreter is NEXT, ENTER and EXIT, none of which need access to TOS
